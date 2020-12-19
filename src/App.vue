@@ -4,18 +4,18 @@
         v-model="drawer"
         app
       >
-      <v-list dense>
+      <v-list dense v-if="user.isLoggedIn">
         <v-list-item link to="/products">
             <v-list-item-content>
               <v-list-item-title>Products</v-list-item-title>
             </v-list-item-content>
         </v-list-item>
-        <v-list-item link to="/users">
+        <v-list-item link to="/users" v-if="user.isAdmin">
             <v-list-item-content>
               <v-list-item-title>Users</v-list-item-title>
             </v-list-item-content>
         </v-list-item>
-        <v-list-item link to="/stores">
+        <v-list-item link to="/stores" v-if="user.isAdmin">
             <v-list-item-content>
               <v-list-item-title>Stores</v-list-item-title>
             </v-list-item-content>
@@ -34,7 +34,7 @@
 
       <v-spacer></v-spacer>
 
-      <v-btn text @click="logout()">
+      <v-btn text @click="logout()" v-if="user.isLoggedIn">
         <span class="mr-2">Logout</span>
       </v-btn>
     </v-app-bar>
@@ -46,6 +46,9 @@
 </template>
 
 <script>
+import { mapState } from 'vuex';
+import API from './API';
+import { REQUEST_METHODS } from './config';
 
 export default {
   name: 'App',
@@ -55,6 +58,23 @@ export default {
   data: () => ({
     drawer: false,
   }),
+  computed: {
+    ...mapState(['user']),
+  },
+  mounted() {
+    // const token = localStorage.token;
+    const { token } = localStorage;
+
+    if (token && typeof token === 'string') {
+      API(REQUEST_METHODS.POST, '/auth/validatetoken')
+        .then((res) => {
+          this.$store.dispatch('user/setAsLoggedIn', res);
+        })
+        .catch(() => {
+          this.$store.dispatch('user/logout');
+        });
+    }
+  },
   methods: {
     logout() {
       console.log('logout');

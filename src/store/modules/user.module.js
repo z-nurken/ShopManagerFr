@@ -6,12 +6,13 @@ export default {
     isAdmin: false,
     isLoggedIn: false,
     username: '',
+    authError: null,
   },
   getters: {
 
   },
   mutations: {
-    updateUsername(state, value) {
+    updateUserName(state, value) {
       state.username = value.toString().trim();
     },
     updateIsAdmin(state, value) {
@@ -20,12 +21,36 @@ export default {
     updateIsLoggedIn(state, value) {
       state.isLoggedIn = value;
     },
+    updateAuthError(state, value) {
+      state.authError = value;
+    },
   },
   actions: {
-    login(_, credentials) {
+    login({ commit }, credentials) {
       API(REQUEST_METHODS.POST, '/auth/login', credentials)
-        .then((response) => console.log(response))
-        .catch((err) => console.error(err));
+        .then(({ username, token, isAdmin }) => {
+          commit('updateUserName', username, { module: 'user' });
+          commit('updateIsLoggedIn', true, { module: 'user' });
+          commit('updateIsAdmin', isAdmin, { module: 'user' });
+          localStorage.token = token;
+        })
+        .catch((err) => {
+          if (err.errorCode) {
+            const message = err.errorCode === 422 ? 'Invalid username or password' : err.message;
+            commit('updateAuthError', message, { module: 'user' });
+          }
+        });
+    },
+    logout({ commit }) {
+      commit('updateUserName', '', { module: 'user' });
+      commit('updateIsLoggedIn', false, { module: 'user' });
+      commit('updateIsAdmin', false, { module: 'user' });
+      localStorage.removeItem('token');
+    },
+    setAsLoggedIn({ commit }, { username, isAdmin }) {
+      commit('updateUserName', username, { module: 'user' });
+      commit('updateIsLoggedIn', true, { module: 'user' });
+      commit('updateIsAdmin', isAdmin, { module: 'user' });
     },
   },
   namespaced: true,

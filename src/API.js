@@ -9,19 +9,15 @@ const API = async (method, path, data) => {
       Authorization: localStorage.token,
     },
     method: method || 'GET',
-  }).then((res) => res.json());
+  }).then((res) => res.json())
+    .then((res) => {
+      if (res.errorCode) {
+        throw new Error(res.message);
+      }
+      return res;
+    });
 
-
-  // const returnPromise = new Promise((resolve,reject) => {
-  //   response.then((res) => {
-  //     if(res.errorCode) {
-  //       throw new Error(res); 
-  //     } 
-  //     resolve(res);
-  //   })
-  //   .catch(reject);
-  // });
-  // return returnPromise;
+  return response;
 };
 
 export default API;
