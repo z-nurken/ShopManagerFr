@@ -32,6 +32,7 @@
 <script>
 import { validationMixin } from 'vuelidate';
 import { required, maxLength, minLength } from 'vuelidate/lib/validators';
+import store from '../store';
 
 export default {
   name: 'Home',
@@ -66,7 +67,11 @@ export default {
   },
   methods: {
     submit() {
-      this.$v.$touch();
+      // this.$v.$touch();
+      store.dispatch('user/login', {
+        username: this.username,
+        password: this.password,
+      });
     },
     clear() {
       this.$v.$reset();
