@@ -1,6 +1,19 @@
 import API from '../../API';
 import { REQUEST_METHODS } from '../../config';
 
+const toggleLogin = ({
+  username, isLoggedIn, isAdmin, commit, token,
+}) => {
+  commit('updateUserName', username, { module: 'user' });
+  commit('updateIsLoggedIn', isLoggedIn, { module: 'user' });
+  commit('updateIsAdmin', isAdmin, { module: 'user' });
+  if (!isLoggedIn) {
+    localStorage.removeItem('token');
+    return;
+  }
+  localStorage.token = token;
+};
+
 export default {
   state: {
     isAdmin: false,
@@ -28,12 +41,9 @@ export default {
   actions: {
     login({ commit }, credentials) {
       API(REQUEST_METHODS.POST, '/auth/login', credentials)
-        .then(({ username, token, isAdmin }) => {
-          commit('updateUserName', username, { module: 'user' });
-          commit('updateIsLoggedIn', true, { module: 'user' });
-          commit('updateIsAdmin', isAdmin, { module: 'user' });
-          localStorage.token = token;
-        })
+        .then(({ username, token, isAdmin }) => toggleLogin({
+          username, isAdmin, isLoggedIn: true, commit, token,
+        }))
         .catch((err) => {
           if (err.errorCode) {
             const message = err.errorCode === 422 ? 'Invalid username or password' : err.message;
