@@ -52,7 +52,6 @@ import { REQUEST_METHODS } from './config';
 
 export default {
   name: 'App',
-
   components: {
   },
   data: () => ({
@@ -77,7 +76,8 @@ export default {
   },
   methods: {
     logout() {
-      console.log('logout');
+      this.$store.dispatch('user/logout');
+      this.$router.push('/');
     },
   },
 };

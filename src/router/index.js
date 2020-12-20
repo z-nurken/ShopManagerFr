@@ -6,7 +6,7 @@ import store from '../store';
 
 Vue.use(VueRouter);
 
-const beforeEnter = async (to, from, next) => {
+const beforeEnter = (to, from, next) => {
   if (store.state.user.isLoggedIn) {
     next();
   } else {
