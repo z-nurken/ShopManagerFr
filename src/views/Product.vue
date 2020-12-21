@@ -20,10 +20,12 @@
             hide-details
             class="search-box"
           ></v-text-field>
-          <v-spacer></v-spacer>
+          <v-btn color="dark" dark class="mb-2 mr-2" @click.prevent="saveQuantities">
+                Save
+              </v-btn>
           <v-dialog v-model="dialog" max-width="500px">
             <template v-slot:activator="{ on, attrs }">
-              <v-btn color="primary" dark class="mb-2" v-bind="attrs" v-on="on">
+              <v-btn color="primary" dark class="mb-2" v-bind="attrs" v-on="on" v-if="user.isAdmin">
                 New Item
               </v-btn>
             </template>
@@ -73,6 +75,30 @@
       <template v-slot:item.image="{ item }">
         <img class="product-image" :src="item.image" :alt="item.name" />
       </template>
+      <template v-slot:[`item.quantities.${STORE_NAMES.STORE1}`]="{ item }">
+        <input
+          v-model="item.quantities[`${STORE_NAMES.STORE1}`]"
+          type="number"
+          class="productInput"
+          @change.prevent="editQuantityHandler(item)"
+        />
+      </template>
+      <template v-slot:[`item.quantities.${STORE_NAMES.STORE2}`]="{ item }">
+        <input
+          v-model="item.quantities[`${STORE_NAMES.STORE2}`]"
+          type="number"
+          class="productInput"
+          @change.prevent="editQuantityHandler(item)"
+        />
+      </template>
+      <template v-slot:[`item.quantities.${STORE_NAMES.STORE3}`]="{ item }">
+        <input
+          v-model="item.quantities[`${STORE_NAMES.STORE3}`]"
+          type="number"
+          class="productInput"
+          @change.prevent="editQuantityHandler(item)"
+        />
+      </template>
       <!-- eslint-disable-next-line -->
       <template v-slot:item.actions="{ item }" v-if="user.isAdmin">
         <v-icon small class="mr-2" @click="editItem(item)"> mdi-pencil </v-icon>
@@ -91,6 +117,7 @@ export default {
   data: () => ({
     dialog: false,
     search: '',
+    STORE_NAMES,
     headers: [
       {
         text: 'Product Image',
@@ -132,6 +159,7 @@ export default {
       price: 0,
       image: '',
     },
+    editedQuantityItems: [],
   }),
 
   computed: {
@@ -163,7 +191,9 @@ export default {
     },
     deleteItem(item) {
       // eslint-disable-next-line
-      const confirmation = confirm('Are you sure you want to delete this item?');
+      const confirmation = confirm(
+        'Are you sure you want to delete this item?',
+      );
       this.$store.dispatch('product/deleteProduct', item);
     },
     close() {
@@ -186,11 +216,29 @@ export default {
       }
       this.close();
     },
+    editQuantityHandler(item) {
+      // this.editedQuantitiesItems
+      const strippedItem = {
+        // eslint-disable-next-line
+        productId: item._id,
+        quantities: {
+          [`${STORE_NAMES.STORE1}`]: item.quantities[`${STORE_NAMES.STORE1}`],
+          [`${STORE_NAMES.STORE2}`]: item.quantities[`${STORE_NAMES.STORE2}`],
+          [`${STORE_NAMES.STORE3}`]: item.quantities[`${STORE_NAMES.STORE3}`],
+        },
+      };
+      this.editedQuantityItems.push(strippedItem);
+    },
+
+    saveQuantities() {
+      this.$store.dispatch('product/updateQuantites', { products: this.editedQuantityItems });
+    },
   },
 };
 </script>
 
 <style lang="scss" scoped>
+
 .product-image {
   height: 60px;
 }
@@ -203,5 +251,24 @@ export default {
 
 .search-box {
   margin-right: 22px;
+}
+
+.productInput {
+  // width: 24px!important;
+  text-align: center;
+  max-width: 60px;
+  padding: 5px 10px;
+
+  border-bottom: 1px #000 solid;
+
+  //Hide arrow in Chrome
+  &::-webkit-outer-spin-button,
+  &::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  //Hide arrows in Firefox
+  -moz-appearance: textfield;
 }
 </style>
