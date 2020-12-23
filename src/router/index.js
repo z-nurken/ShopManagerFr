@@ -38,7 +38,7 @@ const routes = [
     path: '/users',
     name: 'User',
     component: () => import(/* webpackChunkName: "user" */ '../views/Users.vue'),
-    beforeEnterAdmin,
+    beforeEnter: beforeEnterAdmin,
   },
 ];
 
