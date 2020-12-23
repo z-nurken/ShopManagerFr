@@ -70,9 +70,6 @@ export default {
     async updateQuantities(_, items) {
       // eslint-disable-next-line
       await API(REQUEST_METHODS.PATCH, `/products/quantities`, items) 
-        .then(({ deletedProductId }) => {
-         // commit('deleteProduct', deletedProductId, { module: 'product' });
-        })
         .catch(console.log);
     },
   },

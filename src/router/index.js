@@ -14,6 +14,14 @@ const beforeEnter = (to, from, next) => {
   }
 };
 
+const beforeEnterAdmin = (to, from, next) => {
+  if (store.state.user.isLoggedIn && store.state.user.isAdmin) {
+    next();
+  } else {
+    next('/products');
+  }
+};
+
 const routes = [
   {
     path: '/',
@@ -25,6 +33,12 @@ const routes = [
     name: 'Product',
     component: () => import(/* webpackChunkName: "product" */ '../views/Product.vue'),
     beforeEnter,
+  },
+  {
+    path: '/users',
+    name: 'User',
+    component: () => import(/* webpackChunkName: "user" */ '../views/Users.vue'),
+    beforeEnterAdmin,
   },
 ];
 
