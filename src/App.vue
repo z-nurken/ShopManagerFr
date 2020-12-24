@@ -1,40 +1,41 @@
 <template>
   <v-app>
     <v-navigation-drawer
-        v-model="drawer"
-        app
-      >
+      v-model="drawer"
+      app
+    >
       <v-list dense v-if="user.isLoggedIn">
         <v-list-item link to="/products">
-            <v-list-item-content>
-              <v-list-item-title>Products</v-list-item-title>
-            </v-list-item-content>
+          <v-list-item-content>
+            <v-list-item-title>Products</v-list-item-title>
+          </v-list-item-content>
         </v-list-item>
         <v-list-item link to="/users" v-if="user.isAdmin">
-            <v-list-item-content>
-              <v-list-item-title>Users</v-list-item-title>
-            </v-list-item-content>
+          <v-list-item-content>
+            <v-list-item-title>Users</v-list-item-title>
+          </v-list-item-content>
         </v-list-item>
         <v-list-item link to="/shops" v-if="user.isAdmin">
-            <v-list-item-content>
-              <v-list-item-title>Shops</v-list-item-title>
-            </v-list-item-content>
+          <v-list-item-content>
+            <v-list-item-title>Shops</v-list-item-title>
+          </v-list-item-content>
         </v-list-item>
         <v-list-item link to="/shopping-list" v-if="user.isAdmin">
-            <v-list-item-content>
-              <v-list-item-title>Shopping List</v-list-item-title>
-            </v-list-item-content>
+          <v-list-item-content>
+            <v-list-item-title>Shopping List</v-list-item-title>
+          </v-list-item-content>
         </v-list-item>
       </v-list>
     </v-navigation-drawer>
+
     <v-app-bar
       app
       color="dark"
       dark
     >
-    <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
+      <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
       <div class="d-flex align-center">
-        <b>Shopping Manager 🎁</b>
+        <b>Shopping Manager 🛒</b>
       </div>
 
       <v-spacer></v-spacer>
@@ -65,12 +66,10 @@ export default {
   computed: {
     ...mapState(['user']),
   },
-  mounted() {
-    // const token = localStorage.token;
+  async mounted() {
     const { token } = localStorage;
-
     if (token && typeof token === 'string') {
-      API(REQUEST_METHODS.POST, '/auth/validatetoken')
+      await API(REQUEST_METHODS.POST, '/auth/validatetoken')
         .then((res) => {
           this.$store.dispatch('user/setAsLoggedIn', res);
         })

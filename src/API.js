@@ -5,11 +5,12 @@ const API = async (method, path, data) => {
   const response = await fetch(API_URL, {
     body: JSON.stringify(data),
     headers: {
-      'content-type': 'application/json',
+      'Content-Type': 'application/json',
       Authorization: localStorage.token,
     },
     method: method || 'GET',
-  }).then((res) => res.json())
+  })
+    .then((res) => res.json())
     .then((res) => {
       if (res.errorCode) {
         const error = new Error(res.message);
