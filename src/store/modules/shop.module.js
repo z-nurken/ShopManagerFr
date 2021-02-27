@@ -10,6 +10,9 @@ export default {
   mutations: {
     updateShops(state, value) {
       state.shops = value;
+      // const shopIndex = state.shops.findIndex((shop) => shop.id === value.id);
+      // state.shops.splice(shopIndex, 1);
+      // state.shops.push(value);
     },
     updateError(state, value) {
       state.error = value;
@@ -24,15 +27,15 @@ export default {
     },
     deleteShop(state, id) {
       // eslint-disable-next-line
-      const shopIndex = state.shops.findIndex((shop) => shop._id === id);
+      const shopIndex = state.shops.findIndex((shop) => shop.id === id);
       state.shops.splice(shopIndex, 1);
     },
   },
   actions: {
     async fetchShops({ commit }) {
-      await API(REQUEST_METHODS.GET, '/shops/')
-        .then(({ shops }) => {
-          commit('updateShops', shops, { module: 'shop' });
+      await API(REQUEST_METHODS.GET, '/Shop/GetAll')
+        .then((data) => {
+          commit('updateShops', data, { module: 'shop' });
         })
         .catch((err) => {
           commit('updateError', err.message, { module: 'shop' });
@@ -40,9 +43,9 @@ export default {
     },
     async createShop({ commit }, item) {
       commit('updateError', null, { module: 'shop' });
-      await API(REQUEST_METHODS.POST, '/shops/create', item)
-        .then(({ createdShop }) => {
-          commit('addShop', createdShop, { module: 'shop' });
+      await API(REQUEST_METHODS.POST, '/Shop/Create', item)
+        .then((data) => {
+          commit('addShop', data, { module: 'shop' });
         })
         .catch((err) => {
           console.error(err);
@@ -52,11 +55,13 @@ export default {
     async updateShop({ commit }, item) {
       commit('updateError', null, { module: 'shop' });
       // eslint-disable-next-line
-      await API(REQUEST_METHODS.PATCH, `/shops/${item._id}`, {
+      await API(REQUEST_METHODS.PUT, `/Shop/Update`, {
+        id: item.id,
         name: item.name.toString(),
       })
-        .then(({ updatedShop }) => {
-          commit('updateShop', updatedShop, { module: 'shop' });
+        .then((data) => {
+          console.log('data', data);
+          commit('updateShops', data, { module: 'shop' });
         })
         .catch((err) => {
           console.error(err);
@@ -65,9 +70,9 @@ export default {
     },
     async deleteShop({ commit }, id) {
       commit('updateError', null, { module: 'shop' });
-      await API(REQUEST_METHODS.DELETE, `/shops/${id}`)
-        .then(({ deletedShopId }) => {
-          commit('deleteShop', deletedShopId, { module: 'shop' });
+      await API(REQUEST_METHODS.DELETE, `/Shop/DeleteById?id=${id}`)
+        .then((data) => {
+          commit('deleteShop', data, { module: 'shop' });
         })
         .catch((err) => {
           console.error(err);

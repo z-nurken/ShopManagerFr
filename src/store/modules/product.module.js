@@ -29,10 +29,10 @@ export default {
   },
   actions: {
     async fetchProducts({ commit }) {
-      await API(REQUEST_METHODS.GET, '/products/')
-        .then(({ products, totalProducts }) => {
-          commit('updateProducts', products, { module: 'product' });
-          commit('updateTotalProducts', totalProducts, { module: 'product' });
+      await API(REQUEST_METHODS.GET, '/product/GetAll')
+        .then((data) => {
+          commit('updateProducts', data, { module: 'product' });
+          commit('updateTotalProducts', data.length, { module: 'product' });
         })
         .catch((err) => {
           console.log(err);

@@ -1,7 +1,8 @@
-export const BASE_API_URL = 'http://localhost:5000/api/v1';
+export const BASE_API_URL = 'https://localhost:44325';
 export const REQUEST_METHODS = {
   GET: 'GET',
   POST: 'POST',
+  PUT: 'PUT',
   PATCH: 'PATCH',
   DELETE: 'DELETE',
 };

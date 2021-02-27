@@ -53,8 +53,8 @@
 
 <script>
 import { mapState } from 'vuex';
-import API from './API';
-import { REQUEST_METHODS } from './config';
+// import API from './API';
+// import { REQUEST_METHODS } from './config';
 
 export default {
   name: 'App',
@@ -66,18 +66,18 @@ export default {
   computed: {
     ...mapState(['user']),
   },
-  async mounted() {
-    const { token } = localStorage;
-    if (token && typeof token === 'string') {
-      await API(REQUEST_METHODS.POST, '/auth/validatetoken')
-        .then((res) => {
-          this.$store.dispatch('user/setAsLoggedIn', res);
-        })
-        .catch(() => {
-          this.$store.dispatch('user/logout');
-        });
-    }
-  },
+  // async mounted() {
+  //   const { token } = localStorage;
+  //   if (token && typeof token === 'string') {
+  //     await API(REQUEST_METHODS.POST, '/auth/validatetoken')
+  //       .then((res) => {
+  //         this.$store.dispatch('user/setAsLoggedIn', res);
+  //       })
+  //       .catch(() => {
+  //         this.$store.dispatch('user/logout');
+  //       });
+  //   }
+  // },
   methods: {
     logout() {
       this.$store.dispatch('user/logout');

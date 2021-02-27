@@ -4,13 +4,13 @@
     <form>
       <p class="error" v-if="user.authError">{{ user.authError }}</p>
       <v-text-field
-        v-model="username"
-        :error-messages="usernameErrors"
+        v-model="login"
+        :error-messages="loginErrors"
         :counter="15"
         label="Username"
         required
-        @input="$v.username.$touch()"
-        @blur="$v.username.$touch()"
+        @input="$v.login.$touch()"
+        @blur="$v.login.$touch()"
       ></v-text-field>
       <v-text-field
         v-model="password"
@@ -42,11 +42,11 @@ export default {
   name: 'Home',
   mixins: [validationMixin],
   validations: {
-    username: { required, maxLength: maxLength(15), minLength: minLength(3) },
+    login: { required, maxLength: maxLength(15), minLength: minLength(3) },
     password: { required, maxLength: maxLength(30), minLength: minLength(6) },
   },
   data: () => ({
-    username: '',
+    login: '',
     password: '',
     showPassword: false,
   }),
@@ -63,8 +63,8 @@ export default {
     async submit() {
       // this.$v.$touch();
       await store.dispatch('user/login', {
-        username: this.username,
-        password: this.password,
+        Login: this.login,
+        Password: this.password,
       });
       if (this.user.isLoggedIn) {
         this.$router.push('/products');
@@ -72,17 +72,17 @@ export default {
     },
     clear() {
       this.$v.$reset();
-      this.username = '';
+      this.login = '';
       this.password = '';
     },
   },
   computed: {
-    usernameErrors() {
+    loginErrors() {
       const errors = [];
-      if (!this.$v.username.$dirty) return errors;
-      if (!this.$v.username.minLength) errors.push('Username must be at least 3 characters long');
-      if (!this.$v.username.maxLength) errors.push('Username must be at most 15 characters long');
-      if (!this.$v.username.required) errors.push('Username is required.');
+      if (!this.$v.login.$dirty) return errors;
+      if (!this.$v.login.minLength) errors.push('Username must be at least 3 characters long');
+      if (!this.$v.login.maxLength) errors.push('Username must be at most 15 characters long');
+      if (!this.$v.login.required) errors.push('Username is required.');
       return errors;
     },
     passwordErrors() {

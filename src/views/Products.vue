@@ -89,23 +89,23 @@
       <template v-slot:item.image="{ item }">
         <img class="product-image" :src="item.image" :alt="item.name">
       </template>
-      <template v-slot:[`item.quantities.${STORE_NAMES.STORE1}`]="{ item }">
+      <template v-slot:item.stocks[0]="{ item }">
         <input
-          v-model="item.quantities[`${STORE_NAMES.STORE1}`]"
+          v-model="item.quantity"
           type="number"
           class="productInput"
           @change.prevent="editQuanitityHandler(item)" />
       </template>
-      <template v-slot:[`item.quantities.${STORE_NAMES.STORE2}`]="{ item }">
+      <template v-slot:[`item.stocks[1]`]="{ item }">
         <input
-          v-model="item.quantities[`${STORE_NAMES.STORE2}`]"
+          v-model="item.quantity"
           type="number"
           class="productInput"
           @change.prevent="editQuanitityHandler(item)" />
       </template>
-      <template v-slot:[`item.quantities.${STORE_NAMES.STORE3}`]="{ item }">
+      <template v-slot:[`item.stocks[2]`]="{ item }">
         <input
-          v-model="item.quantities[`${STORE_NAMES.STORE3}`]"
+          v-model="item.quantity"
           type="number"
           class="productInput"
           @change.prevent="editQuanitityHandler(item)" />
@@ -150,19 +150,19 @@ export default {
       { text: 'Price ($)', value: 'price', align: 'right' },
       {
         text: STORE_NAMES.STORE1,
-        value: `quantities.${STORE_NAMES.STORE1}`,
+        value: 'stocks[0].quantity',
         align: 'center',
         sortable: false,
       },
       {
         text: STORE_NAMES.STORE2,
-        value: `quantities.${STORE_NAMES.STORE2}`,
+        value: 'stocks[1].quantity',
         align: 'center',
         sortable: false,
       },
       {
         text: STORE_NAMES.STORE3,
-        value: `quantities.${STORE_NAMES.STORE3}`,
+        value: 'stocks[2].quantity',
         align: 'center',
         sortable: false,
       },
@@ -174,13 +174,13 @@ export default {
       name: '',
       price: 0,
       image: '',
-      shops: [],
+      // shops: [],
     },
     defaultItem: {
       name: '',
       price: 0,
       image: '',
-      shops: [],
+      // shops: [],
     },
     editedQuantityItems: [],
   }),
@@ -198,8 +198,11 @@ export default {
   },
   async mounted() {
     await this.$store.dispatch('product/fetchProducts');
+    console.log('products', this.product.products);
+    console.log('productss', this.product.products[0].stocks[0]);
     await this.$store.dispatch('shop/fetchShops');
     this.shop.shops.forEach((shop) => this.shopNames.push(shop.name));
+    console.log('shopnames', this.shopNames);
   },
   methods: {
     editItem(item) {
@@ -209,7 +212,7 @@ export default {
       this.editedItem.name = item.name;
       this.editedItem.price = item.price;
       this.editedItem.image = item.image;
-      this.editedItem.shops = item.shops;
+      // this.editedItem.shops = item.shops;
       this.dialog = true;
     },
 
@@ -240,6 +243,7 @@ export default {
     },
 
     editQuanitityHandler(item) {
+      console.log('asdas');
       const strippedItem = {
         // eslint-disable-next-line
         productId: item._id,
@@ -279,21 +283,21 @@ export default {
   margin-right: 22px;
 }
 
-.productInput {
-  text-align: center;
-  max-width: 60px;
-  padding: 5px 10px;
+// .productInput {
+//   text-align: center;
+//   max-width: 60px;
+//   padding: 5px 10px;
 
-  border-bottom: 1px #000 solid;
+//   border-bottom: 1px #000 solid;
 
-  // Hides arrow in Chrome
-  &::-webkit-outer-spin-button,
-  &::-webkit-inner-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
-  }
+//   // Hides arrow in Chrome
+//   &::-webkit-outer-spin-button,
+//   &::-webkit-inner-spin-button {
+//     -webkit-appearance: none;
+//     margin: 0;
+//   }
 
-  // Hides arrows in firefox
-  -moz-appearance: textfield;
-}
+//   // Hides arrows in firefox
+//   -moz-appearance: textfield;
+// }
 </style>

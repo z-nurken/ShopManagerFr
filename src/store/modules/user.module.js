@@ -5,7 +5,7 @@ export default {
   state: {
     isAdmin: false,
     isLoggedIn: false,
-    username: '',
+    login: '',
     authError: null,
     users: [],
   },
@@ -14,7 +14,7 @@ export default {
   },
   mutations: {
     updateUsername(state, value) {
-      state.username = value.toString().trim();
+      state.login = value.toString().trim();
     },
     updateIsAdmin(state, value) {
       state.isAdmin = value;
@@ -32,28 +32,30 @@ export default {
       state.users.push(value);
     },
     updateUser(state, value) {
-      const userIndex = state.users.findIndex((user) => user.username === value.username);
+      const userIndex = state.users.findIndex((user) => user.login === value.login);
       state.users.splice(userIndex, 1, value);
     },
     deleteUser(state, value) {
-      const userIndex = state.users.findIndex((user) => user.username === value.username);
+      const userIndex = state.users.findIndex((user) => user.login === value.login);
       state.users.splice(userIndex, 1);
     },
   },
   actions: {
     async login({ commit }, credentials) {
-      await API(REQUEST_METHODS.POST, '/auth/login', credentials)
-        .then(({ username, token, isAdmin }) => {
-          commit('updateUsername', username, { module: 'user' });
+      await API(REQUEST_METHODS.POST, '/Token/Create', credentials)
+        .then(({ user, accessToken }) => {
+          let userIsAdmin = false;
+          if (user.userRole.id === 1) userIsAdmin = true;
+          commit('updateUsername', user.login, { module: 'user' });
           commit('updateIsLoggedIn', true, { module: 'user' });
-          commit('updateIsAdmin', isAdmin, { module: 'user' });
+          commit('updateIsAdmin', userIsAdmin, { module: 'user' });
           commit('updateAuthError', null, { module: 'user' });
-          localStorage.token = token;
+          localStorage.token = accessToken;
+          // localStorage.setItem('Shop_Acc', accessToken);
         })
         .catch((err) => {
-          console.log(err);
-          if (err.errorCode) {
-            const message = err.errorCode === 422 ? 'Invalid username or password' : err.message;
+          if (err.status) {
+            const message = err.status === 422 ? 'Invalid login or password' : err.error;
             commit('updateAuthError', message, { module: 'user' });
           }
         });
@@ -65,8 +67,8 @@ export default {
       commit('updateAuthError', null, { module: 'user' });
       localStorage.removeItem('token');
     },
-    setAsLoggedIn({ commit }, { username, isAdmin }) {
-      commit('updateUsername', username, { module: 'user' });
+    setAsLoggedIn({ commit }, { login, isAdmin }) {
+      commit('updateUsername', login, { module: 'user' });
       commit('updateIsLoggedIn', true, { module: 'user' });
       commit('updateIsAdmin', isAdmin, { module: 'user' });
       commit('updateAuthError', null, { module: 'user' });
@@ -94,8 +96,8 @@ export default {
     },
     async updateUser({ commit }, item) {
       commit('updateAuthError', null, { module: 'user' });
-      await API(REQUEST_METHODS.PATCH, `/users/${item.username}`, {
-        username: item.newUsername,
+      await API(REQUEST_METHODS.PATCH, `/users/${item.login}`, {
+        login: item.newUsername,
         password: item.password,
       })
         .then(({ updatedUser }) => {
@@ -106,9 +108,9 @@ export default {
           commit('updateAuthError', err.message, { module: 'user' });
         });
     },
-    async deleteUser({ commit }, username) {
+    async deleteUser({ commit }, login) {
       commit('updateAuthError', null, { module: 'user' });
-      await API(REQUEST_METHODS.DELETE, `/users/${username}`)
+      await API(REQUEST_METHODS.DELETE, `/users/${login}`)
         .then(({ deletedUser }) => {
           commit('deleteUser', deletedUser, { module: 'user' });
         })

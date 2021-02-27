@@ -76,13 +76,13 @@
 import { mapState } from 'vuex';
 
 export default {
-  name: 'Users',
+  name: 'Shops',
   data: () => ({
     dialog: false,
     headers: [
       { text: 'Name', value: 'name' },
-      { text: 'Updated At', value: 'updatedAt', align: 'center' },
-      { text: 'Created At', value: 'createdAt', align: 'center' },
+      { text: 'Updated At', value: 'changedDate', align: 'center' },
+      { text: 'Created At', value: 'createdDate', align: 'center' },
       { text: 'Actions', value: 'actions', sortable: false },
     ],
     editedIndex: -1,
@@ -108,9 +108,11 @@ export default {
   },
   mounted() {
     this.$store.dispatch('shop/fetchShops');
+    console.log('shop', this.shop.shops);
   },
   methods: {
     editShop(item) {
+      console.log('qwerty', item);
       this.editedIndex = this.shop.shops.indexOf(item);
       this.editedItem = item;
       this.dialog = true;
@@ -120,7 +122,8 @@ export default {
       // eslint-disable-next-line
       const confirmation = confirm('Are you sure you want to delete this shop?');
       // eslint-disable-next-line
-      this.$store.dispatch('shop/deleteShop', item._id);
+      // console.log('delete', item);
+      this.$store.dispatch('shop/deleteShop', item.id);
     },
 
     close() {
@@ -134,6 +137,7 @@ export default {
 
     async save() {
       if (this.editedIndex > -1) {
+        console.log('asdfghjkl', this.editedIndex);
         await this.$store.dispatch('shop/updateShop', this.editedItem);
       } else {
         await this.$store.dispatch('shop/createShop', this.editedItem);

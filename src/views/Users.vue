@@ -3,7 +3,7 @@
     <v-data-table
       :headers="headers"
       :items="user.users"
-      sort-by="username"
+      sort-by="login"
       class="elevation-1"
     >
       <template v-slot:top>
@@ -94,7 +94,7 @@ export default {
     dialog: false,
     showPassword: false,
     headers: [
-      { text: 'Username', value: 'username', align: 'center' },
+      { text: 'Username', value: 'login', align: 'center' },
       { text: 'Updated At', value: 'updatedAt', align: 'center' },
       { text: 'Created At', value: 'createdAt', align: 'center' },
       { text: 'Actions', value: 'actions', sortable: false },
@@ -102,12 +102,12 @@ export default {
     editedIndex: -1,
     editedUserId: '',
     editedItem: {
-      username: '',
+      login: '',
       password: '',
       newUsername: '',
     },
     defaultItem: {
-      username: '',
+      login: '',
       password: '',
     },
   }),
@@ -129,8 +129,8 @@ export default {
   methods: {
     editItem(item) {
       this.editedIndex = this.user.users.indexOf(item);
-      this.editedItem.username = item.username;
-      this.editedItem.newUsername = item.username;
+      this.editedItem.login = item.login;
+      this.editedItem.newUsername = item.login;
       this.editedItem.password = item.password;
       this.dialog = true;
     },
@@ -139,7 +139,7 @@ export default {
       // eslint-disable-next-line
       const confirmation = confirm('Are you sure you want to delete this user?');
       // dispatch method to delete user
-      this.$store.dispatch('user/deleteUser', item.username);
+      this.$store.dispatch('user/deleteUser', item.login);
     },
 
     close() {
@@ -156,7 +156,7 @@ export default {
         await this.$store.dispatch('user/updateUser', this.editedItem);
       } else {
         const newUser = {
-          username: this.editedItem.newUsername,
+          login: this.editedItem.newUsername,
           password: this.editedItem.password,
         };
         await this.$store.dispatch('user/createUser', newUser);

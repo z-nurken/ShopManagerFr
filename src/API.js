@@ -6,15 +6,16 @@ const API = async (method, path, data) => {
     body: JSON.stringify(data),
     headers: {
       'Content-Type': 'application/json',
-      Authorization: localStorage.token,
+      Authorization: `Bearer ${localStorage.token}`,
     },
     method: method || 'GET',
   })
     .then((res) => res.json())
     .then((res) => {
-      if (res.errorCode) {
-        const error = new Error(res.message);
-        error.errorCode = res.errorCode;
+      if (res.error) {
+        console.log(res);
+        const error = new Error(res.error);
+        error.status = res.status;
         throw error;
       }
       return res;
