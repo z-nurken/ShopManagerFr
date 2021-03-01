@@ -9,21 +9,22 @@ export default {
   getters: { },
   mutations: {
     updateShops(state, value) {
+      // const shopIndex = state.shops.findIndex((shop) => shop.id === value.id);
+      // state.shops.splice(shopIndex, 1, value);
       state.shops = value;
       // const shopIndex = state.shops.findIndex((shop) => shop.id === value.id);
       // state.shops.splice(shopIndex, 1);
       // state.shops.push(value);
+    },
+    updateShopss(state, value) {
+      const shopIndex = state.shops.findIndex((shop) => shop.id === value.id);
+      state.shops.splice(shopIndex, 1, value);
     },
     updateError(state, value) {
       state.error = value;
     },
     addShop(state, value) {
       state.shops.push(value);
-    },
-    updateUser(state, value) {
-      // eslint-disable-next-line
-      const shopIndex = state.shops.findIndex((shop) => shop._id === value._id);
-      state.shops.splice(shopIndex, 1, value);
     },
     deleteShop(state, id) {
       // eslint-disable-next-line
@@ -60,8 +61,9 @@ export default {
         name: item.name.toString(),
       })
         .then((data) => {
+          // const res = Object.keys(data).map((key) => [Number(key), data[key]]);
           console.log('data', data);
-          commit('updateShops', data, { module: 'shop' });
+          commit('updateShopss', data, { module: 'shop' });
         })
         .catch((err) => {
           console.error(err);

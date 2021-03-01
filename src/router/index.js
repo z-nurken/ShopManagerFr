@@ -45,6 +45,12 @@ const routes = [
     component: () => import(/* webpackChunkName: "shop" */ '../views/Shops.vue'),
     beforeEnter: beforeEnterAdmin,
   },
+  {
+    path: '/hangfire',
+    name: 'Hangfire',
+    component: () => import(/* webpackChunkName: "shop" */ '../views/Hangfire.vue'),
+    beforeEnter: beforeEnterAdmin,
+  },
 ];
 
 const router = new VueRouter({

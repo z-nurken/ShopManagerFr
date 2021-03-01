@@ -74,9 +74,9 @@ export default {
       commit('updateAuthError', null, { module: 'user' });
     },
     async fetchUsers({ commit }) {
-      await API(REQUEST_METHODS.GET, '/users/')
-        .then(({ users }) => {
-          commit('updateUsers', users, { module: 'user' });
+      await API(REQUEST_METHODS.GET, '/User/GetAll')
+        .then((data) => {
+          commit('updateUsers', data, { module: 'user' });
         })
         .catch((err) => {
           console.log(err);
@@ -85,7 +85,7 @@ export default {
     },
     async createUser({ commit }, item) {
       commit('updateAuthError', null, { module: 'user' });
-      await API(REQUEST_METHODS.POST, '/users/create', item)
+      await API(REQUEST_METHODS.POST, '/User/Create', item)
         .then(({ createdUser }) => {
           commit('addUser', createdUser, { module: 'user' });
         })

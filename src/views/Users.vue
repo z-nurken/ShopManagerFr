@@ -95,8 +95,8 @@ export default {
     showPassword: false,
     headers: [
       { text: 'Username', value: 'login', align: 'center' },
-      { text: 'Updated At', value: 'updatedAt', align: 'center' },
-      { text: 'Created At', value: 'createdAt', align: 'center' },
+      { text: 'Updated At', value: 'changedDate', align: 'center' },
+      { text: 'Created At', value: 'dateCreated', align: 'center' },
       { text: 'Actions', value: 'actions', sortable: false },
     ],
     editedIndex: -1,

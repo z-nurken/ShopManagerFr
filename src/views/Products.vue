@@ -67,7 +67,7 @@
                         chips
                         :items="shop.shops"
                         item-text="name"
-                        item-value="_id"
+                        item-value="id"
                         solo
                         multiple
                       >
@@ -174,13 +174,13 @@ export default {
       name: '',
       price: 0,
       image: '',
-      // shops: [],
+      shops: [],
     },
     defaultItem: {
       name: '',
       price: 0,
       image: '',
-      // shops: [],
+      shops: [],
     },
     editedQuantityItems: [],
   }),
@@ -208,11 +208,11 @@ export default {
     editItem(item) {
       this.editedIndex = this.product.products.indexOf(item);
       // eslint-disable-next-line
-      this.editedProductId = item._id;
+      this.editedProductId = item.id;
       this.editedItem.name = item.name;
       this.editedItem.price = item.price;
       this.editedItem.image = item.image;
-      // this.editedItem.shops = item.shops;
+      this.editedItem.shops = item.shops;
       this.dialog = true;
     },
 
@@ -246,7 +246,7 @@ export default {
       console.log('asdas');
       const strippedItem = {
         // eslint-disable-next-line
-        productId: item._id,
+        productId: item.id,
         quantities: {
           [`${STORE_NAMES.STORE1}`]: Number(item.quantities[`${STORE_NAMES.STORE1}`]),
           [`${STORE_NAMES.STORE2}`]: Number(item.quantities[`${STORE_NAMES.STORE2}`]),
@@ -283,21 +283,21 @@ export default {
   margin-right: 22px;
 }
 
-// .productInput {
-//   text-align: center;
-//   max-width: 60px;
-//   padding: 5px 10px;
+.productInput {
+  text-align: center;
+  max-width: 60px;
+  padding: 5px 10px;
 
-//   border-bottom: 1px #000 solid;
+  border-bottom: 1px #000 solid;
 
-//   // Hides arrow in Chrome
-//   &::-webkit-outer-spin-button,
-//   &::-webkit-inner-spin-button {
-//     -webkit-appearance: none;
-//     margin: 0;
-//   }
+  // Hides arrow in Chrome
+  &::-webkit-outer-spin-button,
+  &::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
 
-//   // Hides arrows in firefox
-//   -moz-appearance: textfield;
-// }
+  // Hides arrows in firefox
+  -moz-appearance: textfield;
+}
 </style>

@@ -44,7 +44,7 @@ export default {
         ...item,
         price: item.price.toString(),
         // eslint-disable-next-line
-        shops: item.shops.map((shop) => shop._id),
+        shops: item.shops.map((shop) => shop.id),
       };
       // eslint-disable-next-line
       item.price = item.price.toString();
@@ -57,15 +57,17 @@ export default {
     async createProduct({ commit }, item) {
       const payloadProduct = {
         ...item,
+        // name: item.name,
         price: item.price.toString(),
+        // image: item.image,
         // eslint-disable-next-line
-        shops: item.shops.map((shop) => shop._id),
+        ProductShopsId: item.shops.map((shop) => shop.id),
       };
       // eslint-disable-next-line
       item.price = item.price.toString();
-      await API(REQUEST_METHODS.POST, '/products/create', payloadProduct)
-        .then(({ createdProduct }) => {
-          commit('createdProduct', createdProduct, { module: 'product' });
+      await API(REQUEST_METHODS.POST, '/Product/Create', payloadProduct)
+        .then((data) => {
+          commit('createdProduct', data, { module: 'product' });
         })
         .catch(console.log);
     },
